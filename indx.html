@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vuetify Календарь</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <style>[v-cloak] { display: none }</style>
+</head>
+<body>
+  <div id="app" v-cloak>
+    <v-app>
+      <v-main>
+        <v-container>
+          <v-row justify="center">
+            <v-col cols="12" sm="8" md="6">
+              <v-card>
+                <v-card-title class="primary white--text">
+                  <v-icon large left color="white">mdi-calendar</v-icon>
+                  <span class="headline">Мой Календарь</span>
+                  <v-spacer></v-spacer>
+                  <v-btn icon dark @click="today">
+                    <v-icon>mdi-calendar-today</v-icon>
+                  </v-btn>
+                </v-card-title>
+                
+                <v-card-text>
+                  <v-date-picker
+                    v-model="date"
+                    :events="events"
+                    event-color="green lighten-1"
+                    full-width
+                    locale="ru-ru"
+                    @click:date="showEvent"
+                  ></v-date-picker>
+                </v-card-text>
+                
+                <v-card-actions v-if="selectedEvent" class="pa-4">
+                  <v-alert type="info" dense outlined>
+                    <strong>{{ selectedEvent.date }}</strong>: {{ selectedEvent.text }}
+                  </v-alert>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify({
+        theme: { dark: false }
+      }),
+      data: () => ({
+        date: new Date().toISOString().substr(0, 10),
+        events: [
+          { date: new Date().toISOString().substr(0, 10), text: 'Сегодняшнее событие' },
+          { date: new Date(Date.now() + 86400000).toISOString().substr(0, 10), text: 'Событие завтра' },
+          { date: '2023-12-25', text: 'Рождество' }
+        ],
+        selectedEvent: null
+      }),
+      methods: {
+        today() {
+          this.date = new Date().toISOString().substr(0, 10)
+        },
+        showEvent(date) {
+          this.selectedEvent = this.events.find(e => e.date === date)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
